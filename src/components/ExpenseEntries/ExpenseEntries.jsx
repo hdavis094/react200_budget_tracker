@@ -5,11 +5,27 @@ const ExpenseEntries= () => {
     const { state, dispatch } = useContext(AppContext);
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
+    const [editingId, setEditingId] = useState(null)
 
     const addExpense = () => {
-        dispatch({ type: 'ADD_EXPENSE', payload: { description, amount: parseFloat(amount) } });
+        if(editingId!==null){
+            dispatch({
+                type: 'EDIT_EXPENSE',
+                payload: { id:editingId, description, amount: parseFloat(amount) },
+            });
+            setEditingId(null)
+        } else {
+            dispatch({ type: 'ADD_EXPENSE', 
+                payload: { description, amount: parseFloat(amount) } });
+            };
         setDescription('');
         setAmount('');
+    };
+
+    const startEdit = (expense) => {
+        setEditingId(expense.id);
+        setDescription(expense.description);
+        setAmount(expense.amount);
     };
 
     return (
@@ -42,6 +58,7 @@ const ExpenseEntries= () => {
                     <tr>
                         <th className="border p-2">Description</th>
                         <th className="border p-2">Amount</th>
+                        <th className="border p-2">Edit/Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +66,26 @@ const ExpenseEntries= () => {
                         <tr key={index}>
                             <td className="border p-2">{expense.description}</td>
                             <td className="border p-2">{expense.amount}</td>
+                            <td className="border p-2">
+                                <button 
+                                    className="bg-gray-600 text-white px-4 py-1 rounded gap-4 me-4"
+                                    onClick={()=>
+                                        startEdit(expense)
+                                    }>
+                                        Edit
+                                </button>
+                                <button
+                                    className="bg-red-600 text-white px-4 py-1 rounded gap-4 me-4"
+                                    onClick={() =>
+                                        dispatch({
+                                            type: "DELETE_EXPENSE",
+                                            payload: { id: expense.id },
+                                        })
+                                    }>
+                                        Delete
+                                </button>
+
+                            </td>
                         </tr>
                     ))}
                 </tbody>
