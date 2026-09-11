@@ -5,14 +5,29 @@ const IncomeEntries = () => {
   const { state, dispatch } = useContext(AppContext);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const addIncome = () => {
-    dispatch({
-      type: "ADD_INCOME",
-      payload: { description, amount: parseFloat(amount) },
-    });
+    if(editingId!==null){
+      dispatch({
+        type: "EDIT_INCOME",
+        payload: { id:editingId, description, amount: parseFloat(amount) },
+      });
+      setEditingId(null);
+    } else{
+      dispatch({
+        type: "ADD_INCOME",
+        payload: { description, amount: parseFloat(amount) },
+      });
+    }
     setDescription("");
     setAmount("");
+  };
+
+  const startEdit = (income) => {
+    setEditingId(income.id);
+    setDescription(income.description);
+    setAmount(income.amount);
   };
 
   return (
@@ -57,10 +72,7 @@ const IncomeEntries = () => {
                 <button
                   className="bg-gray-600 text-white px-4 py-1 rounded gap-4 me-4"
                   onClick={() =>
-                    dispatch({
-                      type: "EDIT_INCOME",
-                      payload: { id: income.id },
-                    })
+                    startEdit(income)
                   }
                 >
                   Edit

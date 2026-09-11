@@ -25,9 +25,9 @@ export function appReducer(state, action) {
         ...state,
         expenses: state.expenses.filter((i) => i.id !== action.payload.id),
       };
-    // case 'EDIT_INCOME':
-    //     return { ...state, incomes: state.incomes.map(i => i.id === action.payload.id ? { ...i, ...action.payload } : i)
-    // };
+    case 'EDIT_INCOME':
+        return { ...state, incomes: state.incomes.map(i => i.id === action.payload.id ? { ...i, ...action.payload } : i)
+    };
     // case 'EDIT_EXPENSE':
     //     return { ...state, expenses: state.expenses.map(i => i.id === action.payload.id ? { ...i, ...action.payload } : i )
     // };
